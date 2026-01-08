@@ -1,0 +1,38 @@
+
+CREATE DATABASE IF NOT EXISTS rating_db;
+USE rating_db;
+
+DROP TABLE IF EXISTS ratings;
+DROP TABLE IF EXISTS stores;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    u_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(60) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    address VARCHAR(400),
+    role VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE stores (
+    s_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(60) NOT NULL,
+    email VARCHAR(255),
+    address VARCHAR(400),
+    owner_id INT,
+        FOREIGN KEY (owner_id) REFERENCES users(u_id)
+        ON DELETE SET NULL
+);
+
+CREATE TABLE ratings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    u_id INT NOT NULL,
+    s_id INT NOT NULL,
+        FOREIGN KEY (u_id) REFERENCES users(u_id)
+        ON DELETE CASCADE,
+        FOREIGN KEY (s_id) REFERENCES stores(s_id)
+        ON DELETE CASCADE,
+    UNIQUE(u_id, s_id)
+);
